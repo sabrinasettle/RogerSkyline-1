@@ -80,3 +80,18 @@ task for this script once a week at 4AM and every time the machine reboots.
 - Make a script to monitor changes of the /etc/crontab file and sends an email to
 root if it has been modified. Create a scheduled script task every day at midnight.
 - Stop the services you don’t need for this project.
+
+
+
+
+
+## Resources
+For this nice readme:
+https://www.makeareadme.com/
+
+Others:
+https://milq.github.io/enable-sudo-user-account-debian/
+https://www.hostinger.com/tutorials/sudo-and-the-sudoers-file/
+
+My good friend's github:
+https://github.com/SLO42/roger-skyline-1/tree/master/steps
