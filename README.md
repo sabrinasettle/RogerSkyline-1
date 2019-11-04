@@ -57,6 +57,9 @@ You need both your guest ip which is your virtual machine, and your host ip to b
 > Settings -> Network -> Adapter 1 -> Advanced -> Portforwarding
 of VirtualBox.
 
+<img width="826" alt="Screen Shot 2019-11-04 at 1 38 08 PM" src="https://user-images.githubusercontent.com/22520221/68163644-db478300-ff0f-11e9-8f7f-1c06bf169f49.png">
+
+
 
 ## Connect via SSH and enter into the virtual machine without a password
 
