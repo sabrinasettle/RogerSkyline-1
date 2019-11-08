@@ -319,7 +319,7 @@ sudo systemctl start apache2
 ```
 and thats it!
 
-my site has an insecure unvertufied by a third party self-signed ssl
+my site has an insecure unverified by a third party self-signed ssl
 
 Note my ports now look like this:
 
@@ -332,28 +332,17 @@ https://192.168.99.1:8081/
 
 ## Resources
 For this nice readme:
-https://www.makeareadme.com/
+- https://www.makeareadme.com/
 
 Others:
-https://milq.github.io/enable-sudo-user-account-debian/
-https://www.hostinger.com/tutorials/sudo-and-the-sudoers-file/
-https://wiki.debian.org/DebianFirewall
-https://askubuntu.com/questions/795226/how-to-list-all-enabled-services-from-systemctl
-http://crontab.org/
-https://www.digitalocean.com/community/tutorials/how-to-setup-a-firewall-with-ufw-on-an-ubuntu-and-debian-cloud-server
-https://spyhce.com/blog/using-iptables-instead-ufw-basic-server-setup
-https://www.cyberciti.biz/tips/linux-security.html
+- https://milq.github.io/enable-sudo-user-account-debian/
+- https://www.hostinger.com/tutorials/sudo-and-the-sudoers-file/
+- https://wiki.debian.org/DebianFirewall
+- https://askubuntu.com/questions/795226/how-to-list-all-enabled-services-from-systemctl
+- http://crontab.org/
+- https://www.digitalocean.com/community/tutorials/how-to-setup-a-firewall-with-ufw-on-an-ubuntu-and-debian-cloud-server
+- https://spyhce.com/blog/using-iptables-instead-ufw-basic-server-setup
+- https://www.cyberciti.biz/tips/linux-security.html
 
 My good friend's github:
-https://github.com/SLO42/roger-skyline-1/tree/master/steps
-
-
-
-
-
-
-
-
-0 4 * * 1 /home/scripts/update_script.sh
-@reboot /home/scripts/update_script.sh
-0 0 * * * /home/scripts/check_crontab.sh >> /var/log/check_crontab.log
+- https://github.com/SLO42/roger-skyline-1/tree/master/steps
