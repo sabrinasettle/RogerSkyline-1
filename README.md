@@ -76,8 +76,9 @@ ssh-copy-id -i id_rsa.pub 'vm-username'@'ip-address' -p '2000'
 I set my port to 2000, as seen before, but its really what ever you want that works. The ip address wil also vary. Until you copy this, in your sshd_configue VM file PasswordAuthenication should be set to yes. Afterwards it can be changed to no. 
 
 Now I can use this command to access my VM without using Virtualbox:
-
+```text
 ssh mrrogerbluesky@192.168.99.1 -p 2000
+```
 
 
 ## Building a Firewall
@@ -131,7 +132,7 @@ sudo iptables -A OUTPUT -o lo -j ACCEPT
 msudo iptables -A OUTPUT -p tcp --sport 420 -m state --state ESTABLISHED -j ACCEPT
 ```
 
-for the aalowing of https and web server communication:
+for the allowing of https and web server communication:
 ```bash
 sudo iptables -A INPUT -i enp0s8 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
 
@@ -139,8 +140,8 @@ sudo iptables -A INPUT -i enp0s8 -p tcp --dport 443 -m state --state NEW,ESTABLI
 ```
 
 for protecting from a DOS attack:
-``bash
-sudo iptables -A INPUT -p tcp --dport 80 -m limit --limit 10/minute --limit-burst 50 -j ACCEPT
+```bash
+sudo iptables -A INPUT -p tcp --dport 80 -m limit --limit 10/minute --limit-burst 50 -j ACCEPT\
 ```
 
 ## Keeping up to Date and Services
@@ -189,10 +190,11 @@ root if it has been modified. Create a scheduled script task every day at midnig
 
 crontab -e for editing in nano
 
+```text
 0 4 * * 1 ./var/update_weekly.sh & 
 0 0 * * * bash /var/cron_moniter & 
 @reboot bash /var/update_weekly.sh
-
+```
 sudo crontab -l checks what you have in the crontab file
 
 thes files referenced in the crontab are in the var folder in my user's workspace.
@@ -203,8 +205,6 @@ Also make sure to have the scipts be excuteable, if its not, use chmod +x on the
 
 I can now access my Apache2 server at this address:
 http://192.168.99.1:8080/
-
-Note my ports now look like this:
 
 I edited the orignal Apache welcome 'It works!' site to make a a site that plays a video and has the lyrics to Mr.Blue Sky.
 
@@ -317,7 +317,16 @@ sudo systemctl start apache2
 ```
 and thats it!
 
-my site has an insecure vertufied by a third party self-signed ssl
+my site has an insecure unvertufied by a third party self-signed ssl
+
+Note my ports now look like this:
+
+<img width="827" alt="Screen Shot 2019-11-08 at 2 06 08 PM" src="https://user-images.githubusercontent.com/22520221/68513973-4d320c00-0231-11ea-8d94-e1f28744fa4d.png">
+
+and my site can now be reached at:
+```text
+https://192.168.99.1:8081/
+```
 
 ## Resources
 For this nice readme:
