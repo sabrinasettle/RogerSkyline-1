@@ -145,6 +145,7 @@ sudo iptables -A INPUT -p tcp --dport 80 -m limit --limit 10/minute --limit-burs
 ```
 
 ## Keeping up to Date and Services
+From the pdf:
 
 - It will also have to be up to date as well as the whole packages installed to meet
 the demands of this subject.
@@ -182,11 +183,12 @@ keyboard-setup.service, rsyslog.service, apt-daily-upgrade.timer, apt-daily.time
 
 Cron jobs are used for running tasks at certain times for this project, I need to:
 
--Create a script that updates all the sources of package, then your packages and
+- Create a script that updates all the sources of package, then your packages and
 which logs the whole in a file named /var/log/update_script.log. Create a scheduled
 task for this script once a week at 4AM and every time the machine reboots.
--Make a script to monitor changes of the /etc/crontab file and sends an email to
+- Make a script to monitor changes of the /etc/crontab file and sends an email to
 root if it has been modified. Create a scheduled script task every day at midnight.
+
 
 crontab -e for editing in nano
 
