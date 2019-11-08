@@ -330,6 +330,23 @@ and my site can now be reached at:
 https://192.168.99.1:8081/
 ```
 
+##Turning it in
+
+in the local terminal go to wher your VM is stored for me its
+
+```text
+VirtaulBox VMs
+```
+then cd into the projects's VM
+
+and run 
+
+```bash
+shasum < 'ProjectName'.vdi > checksum
+```
+
+this shasum will change everytime you change something in the enviroment 
+
 ## Resources
 For this nice readme:
 - https://www.makeareadme.com/
