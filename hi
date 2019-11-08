@@ -1,0 +1,134 @@
+<IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin webmaster@localhost
+
+                DocumentRoot /var/www/html
+
+                # Available loglevels: trace8, ..., trace1, debug, info, notice, w$
+                # error, crit, alert, emerg.
+                # It is also possible to configure the loglevel for particular
+                # modules, e.g.
+                #LogLevel info ssl:warn
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+                # For most configuration files from conf-available/, which are
+                # enabled or disabled at a global level, it is possible to
+                # include a line for only one particular virtual host. For example$
+                # following line enables the CGI configuration for this host only
+                # after it has been globally disabled with "a2disconf".
+                #Include conf-available/serve-cgi-bin.conf
+
+                #   SSL Engine Switch:
+                #   Enable/Disable SSL for this virtual host.
+                SSLEngine on
+
+                #   A self-signed (snakeoil) certificate can be created by install$
+                #   the ssl-cert package. See
+                #   /usr/share/doc/apache2/README.Debian.gz for more info.
+                #   If both key and certificate are stored in the same file, only $
+                #   SSLCertificateFile directive is needed.
+                SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+                SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+
+                #   Server Certificate Chain:
+                #   Point SSLCertificateChainFile at a file containing the
+                #   concatenation of PEM encoded CA certificates which form the
+                #   certificate chain for the server certificate. Alternatively
+                #   the referenced file can be the same as SSLCertificateFile
+                #   when the CA certificates are directly appended to the server
+                #   certificate for convinience.
+                #SSLCertificateChainFile /etc/apache2/ssl.crt/server-ca.crt
+
+                #   Certificate Authority (CA):
+                #   Set the CA certificate verification path where to find CA
+                #   certificates for client authentication or alternatively one
+                #   huge file containing all of them (file must be PEM encoded)
+                #   Note: Inside SSLCACertificatePath you need hash symlinks
+                #                to point to the certificate files. Use the provid$
+                #                Makefile to update the hash symlinks after change$
+                #SSLCACertificatePath /etc/ssl/certs/
+                #SSLCACertificateFile /etc/apache2/ssl.crt/ca-bundle.crt
+
+                #   Certificate Revocation Lists (CRL):
+                #   Set the CA revocation path where to find CA CRLs for client
+                #   authentication or alternatively one huge file containing all
+                #   of them (file must be PEM encoded)
+                #   Note: Inside SSLCARevocationPath you need hash symlinks
+                #                to point to the certificate files. Use the provid$
+                #                Makefile to update the hash symlinks after change$
+                #SSLCARevocationPath /etc/apache2/ssl.crl/
+                #SSLCARevocationFile /etc/apache2/ssl.crl/ca-bundle.crl
+
+                #   Client Authentication (Type):
+                #   Client certificate verification type and depth.  Types are
+                #   none, optional, require and optional_no_ca.  Depth is a
+                #   number which specifies how deeply to verify the certificate
+                #   issuer chain before deciding the certificate is not valid.
+                #SSLVerifyClient require
+                #SSLVerifyDepth  10
+
+                #   SSL Engine Options:
+                #   Set various options for the SSL engine.
+                #   o FakeBasicAuth:
+                #        Translate the client X.509 into a Basic Authorisation.  T$
+                #        the standard Auth/DBMAuth methods can be used for access $
+                #        user name is the `one line' version of the client's X.509$
+                #        Note that no password is obtained from the user. Every en$
+                #        file needs this password: `xxj31ZMTZzkVA'.
+                #   o ExportCertData:
+                #        This exports two additional environment variables: SSL_CL$
+                #        SSL_SERVER_CERT. These contain the PEM-encoded certificat$
+                #        server (always existing) and the client (only existing wh$
+                #        authentication is used). This can be used to import the c$
+                #        into CGI scripts.
+                #   o StdEnvVars:
+                #        This exports the standard SSL/TLS related `SSL_*' environ$
+                #        Per default this exportation is switched off for performa$
+                #        because the extraction step is an expensive operation and$
+                #        useless for serving static content. So one usually enable$
+                #        exportation for CGI and SSI requests only.
+                #   o OptRenegotiate:
+                #        This enables optimized SSL connection renegotiation handl$
+                #        directives are used in per-directory context.
+                #SSLOptions +FakeBasicAuth +ExportCertData +StrictRequire
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+
+                #   SSL Protocol Adjustments:
+                #   The safe and default but still SSL/TLS standard compliant shut$
+                #   approach is that mod_ssl sends the close notify alert but does$
+                #   the close notify alert from client. When you need a different $
+                #   approach you can use one of the following variables:
+                #   o ssl-unclean-shutdown:
+                #        This forces an unclean shutdown when the connection is cl$
+                #        SSL close notify alert is send or allowed to received.  T$
+                #        the SSL/TLS standard but is needed for some brain-dead br$
+                #        this when you receive I/O errors because of the standard $
+                #        mod_ssl sends the close notify alert.
+                #   o ssl-accurate-shutdown:
+                #        This forces an accurate shutdown when the connection is c$
+                #        SSL close notify alert is send and mod_ssl waits for the $
+                #        alert of the client. This is 100% SSL/TLS standard compli$
+                #        practice often causes hanging connections with brain-dead$
+                #        this only for browsers where you know that their SSL impl$
+                #        works correctly.
+                #   Notice: Most problems of broken clients are also related to th$
+                #   keep-alive facility, so you usually additionally want to disab$
+                #   keep-alive for those clients, too. Use variable "nokeepalive" $
+                #   Similarly, one has to force some clients to use HTTP/1.0 to wo$
+                #   their broken HTTP/1.1 implementation. Use variables "downgrade$
+                #   "force-response-1.0" for this.
+                # BrowserMatch "MSIE [2-6]" \
+                #               nokeepalive ssl-unclean-shutdown \
+                #               downgrade-1.0 force-response-1.0
+
+        </VirtualHost>
+</IfModule>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet

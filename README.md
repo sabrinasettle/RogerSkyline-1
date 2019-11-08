@@ -75,6 +75,10 @@ ssh-copy-id -i id_rsa.pub 'vm-username'@'ip-address' -p '2000'
 ```
 I set my port to 2000, as seen before, but its really what ever you want that works. The ip address wil also vary. Until you copy this, in your sshd_configue VM file PasswordAuthenication should be set to yes. Afterwards it can be changed to no. 
 
+Now I can use this command to access my VM without using Virtualbox:
+
+ssh mrrogerbluesky@192.168.99.1 -p 2000
+
 
 ## Building a Firewall
 
@@ -118,10 +122,26 @@ which got me this output:
 
 Pretty cool, now I need to edit the policys to be stricter to protect my baby server.
 
+Simply protecting but allowing for the ssh to still communicate:
 
+```bash
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -p tcp -m tcp --dport 420 -j ACCEPT
+sudo iptables -A OUTPUT -o lo -j ACCEPT
+msudo iptables -A OUTPUT -p tcp --sport 420 -m state --state ESTABLISHED -j ACCEPT
+```
 
+for the aalowing of https and web server communication:
+```bash
+sudo iptables -A INPUT -i enp0s8 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
 
+sudo iptables -A INPUT -i enp0s8 -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT
+```
 
+for protecting from a DOS attack:
+``bash
+sudo iptables -A INPUT -p tcp --dport 80 -m limit --limit 10/minute --limit-burst 50 -j ACCEPT
+```
 
 ## Keeping up to Date and Services
 
@@ -152,8 +172,10 @@ I also used
 ps ax
 ```
 
-and 
-dpkg-query -Wf '${Package;-40}${Essential}\n' | grep no
+I disabled these services:
+
+keyboard-setup.service, rsyslog.service, apt-daily-upgrade.timer, apt-daily.timer, and console-setup.service
+
 
 ## Setting up the Cron job
 
@@ -175,6 +197,127 @@ sudo crontab -l checks what you have in the crontab file
 
 thes files referenced in the crontab are in the var folder in my user's workspace.
 
+Also make sure to have the scipts be excuteable, if its not, use chmod +x on the files that aren't. 
+
+### Connection to Web Server and securing with SSL
+
+I can now access my Apache2 server at this address:
+http://192.168.99.1:8080/
+
+Note my ports now look like this:
+
+I edited the orignal Apache welcome 'It works!' site to make a a site that plays a video and has the lyrics to Mr.Blue Sky.
+
+## Getting the SSL working
+
+This was the most frustrating part of this project so far because it seems like most self-signed ssl tutorials were overly complicated and wrong, really.
+
+I found this github page: https://github.com/gde-pass/roger-skyline-1#apache, by another 42 student to have the anwser I was looking for.
+
+To start I need to gerenate a key and a crt:
+
+```bash
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=FR/ST=IDF/O=42/OU=Project-roger/CN=10.11.200.247" -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+```
+
+then from here its simpifing and editing already made files
+
+```bash
+sudo nano /etc/apache2/conf-available/ssl-params.conf
+```
+adding 
+```text
+SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
+SSLProtocol All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
+SSLHonorCipherOrder On
+
+Header always set X-Frame-Options DENY
+Header always set X-Content-Type-Options nosniff
+
+SSLCompression off
+SSLUseStapling on
+SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
+
+SSLSessionTickets Off
+```
+to that file.
+
+then 
+```bash
+sudo nano /etc/apache2/sites-available/default-ssl.conf
+```
+
+to make the file look more like this:
+```text
+<IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin webmaster@localhost
+                ServerName 192.168.99.101
+
+                DocumentRoot /var/www/html
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+                SSLEngine on
+
+                SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+                SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+                #SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
+                #SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+
+
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+
+        </VirtualHost>
+</IfModule>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+
+and then 
+```bash
+sudo nano /etc/apache2/sites-available/000-default.conf
+```
+
+to make it look like: 
+
+```text
+<VirtualHost *:80>
+
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html
+
+        Redirect "/" "https://192.168.99.101/"
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+
+```
+
+then run these guys
+
+```bash
+sudo a2enmod ssl
+sudo a2enmod headers
+sudo a2ensite default-ssl
+sudo a2enconf ssl-params
+sudo systemctl stop apache2
+sudo systemctl start apache2
+```
+and thats it!
+
+my site has an insecure vertufied by a third party self-signed ssl
 
 ## Resources
 For this nice readme:
