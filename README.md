@@ -35,7 +35,7 @@ Some constraints for the the ports and IP address:
 
 - We don’t want you to use the DHCP service of your machine. You’ve got to
 configure it to have a static IP and a Netmask in \30.
--You have to change the default port of the SSH service by the one of your choice.
+- You have to change the default port of the SSH service by the one of your choice.
 SSH access HAS TO be done with publickeys. SSH root access SHOULD NOT
 be allowed directly, but with a user who can be root.
 
@@ -53,32 +53,54 @@ arp -a
 Manually you need to change your IPv4 Network Mask, you do so by going
 > File -> Host Network Manager
 
+While there disable your DHCP Server option
+
+You need your IPv4 Network Mask set to
+```text
+255.255.255.252
+```
+and your IPv4 address should be
+```text
+192.168.99.1
+```
+for the local machine thats one but for the machine we are connecting to it means anything above 100 but only to a certain point
+
 You need both your guest ip which is your virtual machine, and your host ip to be the same with port on both machines opened. This is done manually in the 
 > Settings -> Network -> Adapter 1 -> Advanced -> Portforwarding
 of VirtualBox.
 
 <img width="826" alt="Screen Shot 2019-11-04 at 1 38 08 PM" src="https://user-images.githubusercontent.com/22520221/68163644-db478300-ff0f-11e9-8f7f-1c06bf169f49.png">
 
+> /etc -> network -> interfaces
 
+insert this 
+```text
+auto enp0s8
+iface enp0s8 inet static
+	address 192.168.99.101
+	netmask 255.255.255.252
+```
+which is just like what you manually entered before.
 
-## Connect via SSH and enter into the virtual machine without a password
-
-From the project pdf on SSH:
-
--You have to change the default port of the SSH service by the one of your choice.
-SSH access HAS TO be done with publickeys. SSH root access SHOULD NOT
-be allowed directly, but with a user who can be root
+### Connect via SSH and enter into the virtual machine without a password
 
 For this part, reader I am going to assume you know about SSH and RSA keys. When used with the virtual machine RSA public keys make for a secure and password free way to authenicate. You will need to generate a key and then copy it.
+
 ```bash
 ssh-copy-id -i id_rsa.pub 'vm-username'@'ip-address' -p '2000'
 ```
-I set my port to 2000, as seen before, but its really what ever you want that works. The ip address wil also vary. Until you copy this, in your sshd_configue VM file PasswordAuthenication should be set to yes. Afterwards it can be changed to no. 
+
+So that the public and private key have a handshake so that the key will be greeted by a specific lock.
+
+You need to disable root access which is port 22, I changed mine to 420, 42 with a zero just in case you were wondering.
+You need to know the parellel port on the local machine, I set my port to 2000, as seen before, but its really what ever you want that works. The ip address wil also vary. Until you copy this, in your sshd_configue VM file PasswordAuthenication should be set to yes. Afterwards it should be changed to no. 
 
 Now I can use this command to access my VM without using Virtualbox:
+
 ```text
 ssh mrrogerbluesky@192.168.99.1 -p 2000
 ```
+
 
 
 ## Building a Firewall
@@ -101,14 +123,21 @@ then update the rules for my port 420
 ```bash
 sudo ufw allow 420/tcp
 ```
-and allowing for ssh connection whihc is threw port 2000
-```bash
-sudo ufw allow ssh
-```
 and this command wil be useful for later when I want to connect through to my web server
 ```bash
 sudo ufw allow 80/tcp
 ```
+and
+```bash
+sudo ufw allow 443/tcp
+```
+then
+```bash 
+sudo ufw enable
+```
+to enable these rules
+
+### Iptables and Protection
 
 I used the built in program *iptables* to access the information I needed. This needs su or sudo access so it would be a bad idea to make this your first step.
 
