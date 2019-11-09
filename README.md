@@ -389,6 +389,7 @@ Others:
 - https://www.digitalocean.com/community/tutorials/how-to-setup-a-firewall-with-ufw-on-an-ubuntu-and-debian-cloud-server
 - https://spyhce.com/blog/using-iptables-instead-ufw-basic-server-setup
 - https://www.cyberciti.biz/tips/linux-security.html
+- https://spyhce.com/blog/using-iptables-instead-ufw-basic-server-setup
 
 My good friend's github:
 - https://github.com/SLO42/roger-skyline-1/tree/master/steps
