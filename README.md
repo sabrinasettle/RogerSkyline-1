@@ -390,6 +390,7 @@ Others:
 - https://spyhce.com/blog/using-iptables-instead-ufw-basic-server-setup
 - https://www.cyberciti.biz/tips/linux-security.html
 - https://spyhce.com/blog/using-iptables-instead-ufw-basic-server-setup
+- https://hackertarget.com/nmap-cheatsheet-a-quick-reference-guide/ -- for testing port scanning against the server
 
 My good friend's github:
 - https://github.com/SLO42/roger-skyline-1/tree/master/steps
