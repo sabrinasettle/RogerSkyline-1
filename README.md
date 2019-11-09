@@ -359,7 +359,7 @@ and my site can now be reached at:
 https://192.168.99.1:8081/
 ```
 
-##Turning it in
+## Turning it in
 
 in the local terminal go to wher your VM is stored for me its
 
