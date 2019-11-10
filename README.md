@@ -43,13 +43,12 @@ So to start the project needs for both the host and guest ips to communicate. Fi
 ```bash
 ip -br -h -f inet a
 ```
-when ran in the virtual box returns a brief hunman readable family {inet} ip address.
+when ran in the virtual box returns a brief human readable family {inet} ip address.
 
 But we also want to check to see if its running and availble in the Host ip:
 ```bash
 arp -a
 ```
-
 Manually you need to change your IPv4 Network Mask, you do so by going
 > File -> Host Network Manager
 
@@ -100,8 +99,6 @@ Now I can use this command to access my VM without using Virtualbox:
 ```text
 ssh mrrogerbluesky@192.168.99.1 -p 2000
 ```
-
-
 
 ## Building a Firewall
 
@@ -361,20 +358,19 @@ https://192.168.99.1:8081/
 
 ## Turning it in
 
-in the local terminal go to wher your VM is stored for me its
+In the local terminal go to where your VM is stored, for me its
 
 ```text
 VirtaulBox VMs
 ```
-then cd into the projects's VM
 
-and run 
+As I used VirtualBox, then cd into the projects's VM and run: 
 
 ```bash
 shasum < 'ProjectName'.vdi > checksum
 ```
 
-this shasum will change everytime you change something in the enviroment 
+this shasum will change everytime you change something in the enviorment. 
 
 ## Resources
 For this nice readme:
@@ -393,5 +389,3 @@ Others:
 - https://hackertarget.com/nmap-cheatsheet-a-quick-reference-guide/ -- for testing port scanning against the server
 - https://www.aelius.com/njh/subnet_sheet.html
 
-My good friend's github:
-- https://github.com/SLO42/roger-skyline-1/tree/master/steps
