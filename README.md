@@ -1,17 +1,15 @@
 # RogerSkyline-1
 ## Home is where the web server is
 
-This projct is an interesting exercise in commands and dealing with virtual machines to create a web server.
+This project is an interesting exercise in commands and dealing with virtual machines to create a web server. It uses knowledge from the previous Networking projects, Docker and Init.
 
 ## Setup of Virtual Machine
 
-To start you need to install a debian image to something like VirtualBox, which I used. With the project ther are some very specific aspects. 
+To start you need to install a debian image to something like VirtualBox, which I used. With the project there are some very specific aspects. 
 
 - A disk size of 8 GB
 - Have at least one 4.2 partition
 - Use sudo, with this user, to be able to perform operation requiring special rights.
-- We don’t want you to use the DHCP service of your machine. You’ve got to
-configure it to have a static IP and a Netmask in \30.
 
 So I set that up, Debian offers that a 8 GB hard disk is a good option so it was not diffcult to create that option. The partition setup was simple enough by creating a new partion, specifing the type, size, and what directory it was tied to.
 
@@ -54,10 +52,12 @@ Manually you need to change your IPv4 Network Mask, you do so by going
 
 While there disable your DHCP Server option
 
-You need your IPv4 Network Mask set to
+You need your IPv4 Network Mask set to:
 ```text
 255.255.255.252
 ```
+See why with a link that lives down below!
+
 and your IPv4 address should be
 ```text
 192.168.99.1
