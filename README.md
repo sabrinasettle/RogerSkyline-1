@@ -1,19 +1,19 @@
 # RogerSkyline-1
 ## Home is where the web server is
 
-This project is an interesting exercise in commands and dealing with virtual machines to create a web server. It uses knowledge from the previous Networking projects, Docker and Init.
+This project is an interesting exercise in bash commands and dealing with virtual machines to create a web server. It uses knowledge from the previous Networking projects, Docker and Init.
 
 ## Setup of Virtual Machine
 
-To start you need to install a debian image to something like VirtualBox, which I used. With the project there are some very specific aspects. 
+To start you need to install a Debian image to something like VirtualBox, which is what I used. With the project there are some very specific aspects. 
 
 - A disk size of 8 GB
 - Have at least one 4.2 partition
-- Use sudo, with this user, to be able to perform operation requiring special rights.
+- Use sudo, with this user, to be able to perform operations requiring special rights.
 
-So I set that up, Debian offers that a 8 GB hard disk is a good option so it was not diffcult to create that option. The partition setup was simple enough by creating a new partion, specifing the type, size, and what directory it was tied to.
+So I set that up, Debian offers that a 8 GB hard disk is a good option so it was not difficult to create that option. The partition setup was simple enough by creating a new partition, specifying the type, size, and what directory it was tied to.
 
-The first thing after the install wit all of the specfic constraints, I run:
+The first thing after the install wit all of the specific constraints, I run:
 ```bash
 apt-get install sudo
 ```
@@ -21,7 +21,7 @@ This installs sudo and you can use:
 ```bash
 adduser username sudo
 ```
-But I found that didnt work and I needed to run 'su' and then:
+But I found that didn't work and I needed to run 'su' and then:
 ```bash
 nano /etc/sudoers
 ```
@@ -43,7 +43,7 @@ ip -br -h -f inet a
 ```
 when ran in the virtual box returns a brief human readable family {inet} ip address.
 
-But we also want to check to see if its running and availble in the Host ip:
+But we also want to check to see if its running and available in the Host ip:
 ```bash
 arp -a
 ```
@@ -62,7 +62,7 @@ and your IPv4 address should be
 ```text
 192.168.99.1
 ```
-for the local machine thats one but for the machine we are connecting to it means anything above 100 but only to a certain point
+for the local machine that's one but for the machine we are connecting to it means anything above 100 but only to a certain point
 
 You need both your guest ip which is your virtual machine, and your host ip to be the same with port on both machines opened. This is done manually in the 
 > Settings -> Network -> Adapter 1 -> Advanced -> Portforwarding
@@ -83,7 +83,7 @@ which is just like what you manually entered before.
 
 ### Connect via SSH and enter into the virtual machine without a password
 
-For this part, reader I am going to assume you know about SSH and RSA keys. When used with the virtual machine RSA public keys make for a secure and password free way to authenicate. You will need to generate a key and then copy it.
+For this part, reader I am going to assume you know about SSH and RSA keys. When used with the virtual machine RSA public keys make for a secure and password free way to authenticate. You will need to generate a key and then copy it.
 
 ```bash
 ssh-copy-id -i id_rsa.pub 'vm-username'@'ip-address' -p '2000'
@@ -92,7 +92,7 @@ ssh-copy-id -i id_rsa.pub 'vm-username'@'ip-address' -p '2000'
 So that the public and private key have a handshake so that the key will be greeted by a specific lock.
 
 You need to disable root access which is port 22, I changed mine to 420, 42 with a zero just in case you were wondering.
-You need to know the parellel port on the local machine, I set my port to 2000, as seen before, but its really what ever you want that works. The ip address wil also vary. Until you copy this, in your sshd_configue VM file PasswordAuthenication should be set to yes. Afterwards it should be changed to no. 
+You need to know the parallel port on the local machine, I set my port to 2000, as seen before, but it's really whatever you want that works. The ip address will also vary. Until you copy this, in your sshd_configue VM file PasswordAuthenication should be set to yes. Afterwards it should be changed to no. 
 
 Now I can use this command to access my VM without using Virtualbox:
 
@@ -109,7 +109,7 @@ outside the VM.
 -You have to set a DOS (Denial Of Service Attack) protection on your open ports
 of your VM.
 
-Debian in its undistrub state does not have UFW, so I had to install it:
+Debian in its undisturbed state does not have UFW, so I had to install it:
 
 ```bash
 sudo apt-get install ufw
@@ -120,7 +120,7 @@ then update the rules for my port 420
 ```bash
 sudo ufw allow 420/tcp
 ```
-and this command wil be useful for later when I want to connect through to my web server
+and this command will be useful for later when I want to connect through to my web server
 ```bash
 sudo ufw allow 80/tcp
 ```
@@ -147,7 +147,7 @@ which got me this output:
 <img width="375" alt="Screen Shot 2019-11-06 at 9 08 54 AM" src="https://user-images.githubusercontent.com/22520221/68320717-54acb600-0075-11ea-81d5-efd5cce86e9b.png">
 
 
-Pretty cool, now I need to edit the policys to be stricter to protect my baby server.
+Pretty cool, now I need to edit the policies to be stricter to protect my baby server.
 
 Simply protecting but allowing for the ssh to still communicate:
 
@@ -225,30 +225,30 @@ crontab -e for editing in nano
 ```
 sudo crontab -l checks what you have in the crontab file
 
-thes files referenced in the crontab are in the var folder in my user's workspace.
+These files referenced in the crontab are in the var folder in my user's workspace.
 
-Also make sure to have the scipts be excuteable, if its not, use chmod +x on the files that aren't. 
+Also make sure to have the scripts be executable, if it's not, use chmod +x on the files that aren't. 
 
 ### Connection to Web Server and securing with SSL
 
 I can now access my Apache2 server at this address:
 http://192.168.99.1:8080/
 
-I edited the orignal Apache welcome 'It works!' site to make a a site that plays a video and has the lyrics to Mr.Blue Sky.
+I edited the original Apache welcome 'It works!' site to make a a site that plays a video and has the lyrics to Mr.Blue Sky.
 
 ## Getting the SSL working
 
 This was the most frustrating part of this project so far because it seems like most self-signed ssl tutorials were overly complicated and wrong, really.
 
-I found this github page: https://github.com/gde-pass/roger-skyline-1#apache, by another 42 student to have the anwser I was looking for.
+I found this github page: https://github.com/gde-pass/roger-skyline-1#apache, by another 42 students to have the answer I was looking for.
 
-To start I need to gerenate a key and a crt:
+To start I need to generate a key and a crt:
 
 ```bash
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=FR/ST=IDF/O=42/OU=Project-roger/CN=10.11.200.247" -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
 ```
 
-then from here its simpifing and editing already made files
+then from here its simplifying and editing already made files
 
 ```bash
 sudo nano /etc/apache2/conf-available/ssl-params.conf
@@ -343,7 +343,7 @@ sudo a2enconf ssl-params
 sudo systemctl stop apache2
 sudo systemctl start apache2
 ```
-and thats it!
+and that's it!
 
 my site has an insecure unverified by a third party self-signed ssl
 
@@ -361,7 +361,7 @@ https://192.168.99.1:8081/
 In the local terminal go to where your VM is stored, for me its
 
 ```text
-VirtaulBox VMs
+VirtualBox VMs
 ```
 
 As I used VirtualBox, then cd into the projects's VM and run: 
@@ -370,7 +370,7 @@ As I used VirtualBox, then cd into the projects's VM and run:
 shasum < 'ProjectName'.vdi > checksum
 ```
 
-this shasum will change everytime you change something in the enviorment. 
+This shasum will change every time you change something in the environment. 
 
 ## Resources
 For this nice readme:
